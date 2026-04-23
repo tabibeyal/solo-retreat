@@ -31,6 +31,7 @@ Builds:
     subdir: app
     gradle:
       - yes
+    prebuild: sed -i -e '/sdk.dir/d' local.properties || true
 
 AutoUpdateMode: Version %v
 UpdateCheckMode: Tags
