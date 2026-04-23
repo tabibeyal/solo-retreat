@@ -106,7 +106,7 @@ fun TalkCatalogScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = "Select talks to download for offline listening during your retreat. Talks from dhammatalks.org are freely available.",
+                text = "Select talks to download for offline listening. Only direct audio downloads (e.g. from dhammatalks.org) are supported to ensure reliability.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(vertical = 8.dp)

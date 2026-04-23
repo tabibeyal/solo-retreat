@@ -101,7 +101,7 @@ com.soloretreat/
 
 ## Known Limitations / Notes
 
-- YouTube talks are explicitly excluded per architecture requirements — UI shows appropriate messaging.
+- YouTube talks are explicitly excluded per architecture requirements to ensure full offline reliability.
 
 ## License
 
