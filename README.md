@@ -101,7 +101,6 @@ com.homeretreat.planner/
 
 ## Known Limitations / Notes
 
-- The included `bell_start.mp3` and `bell_end.mp3` are placeholder files. Replace them with actual Tibetan singing bowl recordings in `app/src/main/res/raw/`.
 - YouTube talks are explicitly excluded per architecture requirements — UI shows appropriate messaging.
 
 ## License
