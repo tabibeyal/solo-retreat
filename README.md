@@ -99,6 +99,16 @@ com.soloretreat/
 - [x] Warm, non-clinical theme (sage green, ochre, cream)
 - [x] Adaptive app icon
 
+## Support the Project
+
+If you find this tool helpful for your practice, you can support its development:
+- **PayPal**: [Donate via PayPal](https://www.paypal.com/donate?business=eyaltabib82@gmail.com&currency_code=USD)
+
+## Links
+
+- **Website**: [https://github.com/tabibeyal/soloretreat](https://github.com/tabibeyal/soloretreat)
+- **Changelog**: [https://github.com/tabibeyal/soloretreat/releases](https://github.com/tabibeyal/soloretreat/releases)
+
 ## Known Limitations / Notes
 
 - YouTube talks are explicitly excluded per architecture requirements to ensure full offline reliability.
