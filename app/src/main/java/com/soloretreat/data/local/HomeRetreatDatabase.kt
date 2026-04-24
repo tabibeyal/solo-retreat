@@ -36,7 +36,7 @@ import com.soloretreat.data.local.entity.ScheduleTemplateBlock
         ScheduleTemplate::class,
         ScheduleTemplateBlock::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
