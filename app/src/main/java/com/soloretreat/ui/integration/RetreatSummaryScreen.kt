@@ -30,6 +30,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.soloretreat.R
 import com.soloretreat.ui.components.RetreatAppBar
 import com.soloretreat.util.TimeUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun RetreatSummaryScreen(
@@ -48,6 +50,7 @@ fun RetreatSummaryScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -56,12 +59,15 @@ fun RetreatSummaryScreen(
                 onNavigateBack = onNavigateBack,
                 actions = {
                     IconButton(onClick = {
-                        val intent = Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_SUBJECT, "My Solo Retreat Summary")
-                            putExtra(Intent.EXTRA_TEXT, viewModel.generateExportText())
+                        scope.launch {
+                            val exportText = viewModel.generateExportText()
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_SUBJECT, "My Solo Retreat Summary")
+                                putExtra(Intent.EXTRA_TEXT, exportText)
+                            }
+                            context.startActivity(Intent.createChooser(intent, "Share Retreat Summary"))
                         }
-                        context.startActivity(Intent.createChooser(intent, "Share Retreat Summary"))
                     }) {
                         Icon(Icons.Default.Share, contentDescription = "Share")
                     }
@@ -111,17 +117,31 @@ fun RetreatSummaryScreen(
                 }
             }
 
-            // Meditation stats
+            // Sitting meditation stats
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Meditation Practice",
+                        text = "Sitting Meditation",
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    StatRow(label = "Total Sitting Time", value = state.formattedMeditationTime)
-                    StatRow(label = "Completed Sessions", value = "${state.completedSessions}")
-                    StatRow(label = "Interrupted Sessions", value = "${state.interruptedSessions}")
+                    StatRow(label = "Total Time", value = state.formattedSittingTime)
+                    StatRow(label = "Completed Sessions", value = "${state.sittingCompleted}")
+                    StatRow(label = "Interrupted Sessions", value = "${state.sittingInterrupted}")
+                }
+            }
+
+            // Walking meditation stats
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Walking Meditation",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    StatRow(label = "Total Time", value = state.formattedWalkingTime)
+                    StatRow(label = "Completed Sessions", value = "${state.walkingCompleted}")
+                    StatRow(label = "Interrupted Sessions", value = "${state.walkingInterrupted}")
                 }
             }
 

@@ -3,6 +3,8 @@ package com.soloretreat.ui.integration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soloretreat.data.local.entity.RetreatConfig
+import com.soloretreat.data.model.ActivityType
+import com.soloretreat.data.repository.JournalRepository
 import com.soloretreat.data.repository.MealLogRepository
 import com.soloretreat.data.repository.MeditationSessionRepository
 import com.soloretreat.data.repository.PreceptRepository
@@ -12,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalTime
@@ -22,15 +25,20 @@ class RetreatSummaryViewModel @Inject constructor(
     private val retreatRepository: RetreatRepository,
     private val meditationSessionRepository: MeditationSessionRepository,
     private val preceptRepository: PreceptRepository,
-    private val mealLogRepository: MealLogRepository
+    private val mealLogRepository: MealLogRepository,
+    private val journalRepository: JournalRepository
 ) : ViewModel() {
 
     data class SummaryState(
         val config: RetreatConfig? = null,
-        val totalMeditationMinutes: Long = 0,
-        val formattedMeditationTime: String = "0m",
-        val completedSessions: Int = 0,
-        val interruptedSessions: Int = 0,
+        val sittingMinutes: Long = 0,
+        val formattedSittingTime: String = "0m",
+        val sittingCompleted: Int = 0,
+        val sittingInterrupted: Int = 0,
+        val walkingMinutes: Long = 0,
+        val formattedWalkingTime: String = "0m",
+        val walkingCompleted: Int = 0,
+        val walkingInterrupted: Int = 0,
         val preceptRate: Float = 0f,
         val onTimeMeals: Int = 0,
         val lateMeals: Int = 0,
@@ -53,19 +61,26 @@ class RetreatSummaryViewModel @Inject constructor(
                     val startInstant = TimeUtils.localDateTimeToInstant(startDate, LocalTime.MIN)
                     val endInstant = TimeUtils.localDateTimeToInstant(endDate.plusDays(1), LocalTime.MIN)
 
-                    val totalMinutes = meditationSessionRepository.getTotalMinutes(startInstant, endInstant)
-                    val completed = meditationSessionRepository.countCompletedSessions(startInstant, endInstant)
-                    val interrupted = meditationSessionRepository.countInterruptedSessions(startInstant, endInstant)
+                    val sittingMinutes = meditationSessionRepository.getTotalMinutesByType(ActivityType.SITTING, startInstant, endInstant)
+                    val sittingCompleted = meditationSessionRepository.countCompletedByType(ActivityType.SITTING, startInstant, endInstant)
+                    val sittingInterrupted = meditationSessionRepository.countInterruptedByType(ActivityType.SITTING, startInstant, endInstant)
+                    val walkingMinutes = meditationSessionRepository.getTotalMinutesByType(ActivityType.WALKING, startInstant, endInstant)
+                    val walkingCompleted = meditationSessionRepository.countCompletedByType(ActivityType.WALKING, startInstant, endInstant)
+                    val walkingInterrupted = meditationSessionRepository.countInterruptedByType(ActivityType.WALKING, startInstant, endInstant)
                     val preceptRate = preceptRepository.getObservanceRate(startDate, endDate)
                     val onTime = mealLogRepository.countOnTimeMeals(startDate, endDate)
                     val late = mealLogRepository.countLateMeals(startDate, endDate)
 
                     _state.value = SummaryState(
                         config = config,
-                        totalMeditationMinutes = totalMinutes,
-                        formattedMeditationTime = TimeUtils.formatDuration(totalMinutes),
-                        completedSessions = completed,
-                        interruptedSessions = interrupted,
+                        sittingMinutes = sittingMinutes,
+                        formattedSittingTime = TimeUtils.formatDuration(sittingMinutes),
+                        sittingCompleted = sittingCompleted,
+                        sittingInterrupted = sittingInterrupted,
+                        walkingMinutes = walkingMinutes,
+                        formattedWalkingTime = TimeUtils.formatDuration(walkingMinutes),
+                        walkingCompleted = walkingCompleted,
+                        walkingInterrupted = walkingInterrupted,
                         preceptRate = preceptRate,
                         onTimeMeals = onTime,
                         lateMeals = late,
@@ -76,22 +91,35 @@ class RetreatSummaryViewModel @Inject constructor(
         }
     }
 
-    fun generateExportText(): String {
+    suspend fun generateExportText(): String {
         val s = _state.value
         val config = s.config ?: return ""
-        val startDate = config.startDate?.let { TimeUtils.formatFullDate(it) } ?: "?"
-        val endDate = config.endDate?.let { TimeUtils.formatFullDate(it) } ?: "?"
+        val startDateStr = config.startDate?.let { TimeUtils.formatFullDate(it) } ?: "?"
+        val endDateStr = config.endDate?.let { TimeUtils.formatFullDate(it) } ?: "?"
+
+        val journalEntries = if (config.startDate != null && config.endDate != null) {
+            val startInstant = TimeUtils.localDateTimeToInstant(config.startDate, LocalTime.MIN)
+            val endInstant = TimeUtils.localDateTimeToInstant(config.endDate.plusDays(1), LocalTime.MIN)
+            journalRepository.getEntriesForRange(startInstant, endInstant)
+        } else {
+            emptyList()
+        }
 
         return buildString {
             appendLine("SOLO RETREAT SUMMARY")
             appendLine("====================")
             appendLine()
-            appendLine("Dates: $startDate to $endDate")
+            appendLine("Dates: $startDateStr to $endDateStr")
             appendLine()
-            appendLine("MEDITATION")
-            appendLine("  Total time: ${s.formattedMeditationTime}")
-            appendLine("  Completed sessions: ${s.completedSessions}")
-            appendLine("  Interrupted sessions: ${s.interruptedSessions}")
+            appendLine("SITTING MEDITATION")
+            appendLine("  Total time: ${s.formattedSittingTime}")
+            appendLine("  Completed sessions: ${s.sittingCompleted}")
+            appendLine("  Interrupted sessions: ${s.sittingInterrupted}")
+            appendLine()
+            appendLine("WALKING MEDITATION")
+            appendLine("  Total time: ${s.formattedWalkingTime}")
+            appendLine("  Completed sessions: ${s.walkingCompleted}")
+            appendLine("  Interrupted sessions: ${s.walkingInterrupted}")
             appendLine()
             appendLine("PRECEPTS")
             appendLine("  Average observance: ${(s.preceptRate * 100).toInt()}%")
@@ -100,6 +128,20 @@ class RetreatSummaryViewModel @Inject constructor(
             appendLine("  Before noon: ${s.onTimeMeals}")
             appendLine("  After noon: ${s.lateMeals}")
             appendLine()
+            
+            if (journalEntries.isNotEmpty()) {
+                appendLine("JOURNAL ENTRIES")
+                appendLine("---------------")
+                journalEntries.forEach { entry ->
+                    appendLine("[${TimeUtils.formatDateTime(entry.createdAt)}]")
+                    if (entry.tags.isNotBlank()) {
+                        appendLine("Tags: ${entry.tags}")
+                    }
+                    appendLine(entry.entryText)
+                    appendLine()
+                }
+            }
+
             appendLine("Generated by Solo Retreat Planner")
         }
     }

@@ -11,10 +11,16 @@ import java.time.format.DateTimeFormatter
 object TimeUtils {
     private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a")
     private val fullDateFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, HH:mm")
 
     fun formatTime(time: LocalTime): String = time.format(timeFormatter)
 
     fun formatFullDate(date: LocalDate): String = date.format(fullDateFormatter)
+
+    fun formatDateTime(instant: Instant): String {
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+            .format(dateTimeFormatter)
+    }
 
     fun formatDuration(minutes: Long): String {
         val hours = minutes / 60
