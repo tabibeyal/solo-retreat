@@ -18,6 +18,9 @@ interface DhammaTalkDao {
     @Query("SELECT * FROM dhamma_talks WHERE revealedAt IS NOT NULL ORDER BY revealedAt DESC")
     fun getRevealedTalks(): Flow<List<DhammaTalk>>
 
+    @Query("SELECT * FROM dhamma_talks WHERE category = :category ORDER BY title")
+    fun getTalksByCategory(category: String): Flow<List<DhammaTalk>>
+
     @Query("SELECT COUNT(*) FROM dhamma_talks WHERE revealedAt IS NOT NULL")
     suspend fun countRevealed(): Int
 

@@ -114,6 +114,13 @@ class ScheduleBuilderViewModel @Inject constructor(
         }
     }
 
+    fun getLastEndTime(dayOffset: Int): LocalTime {
+        return blocks.value
+            .filter { it.dayOffset == dayOffset }
+            .maxByOrNull { it.endTime }
+            ?.endTime ?: LocalTime.of(6, 0)
+    }
+
     private fun validateSchedule() {
         viewModelScope.launch {
             _validationResult.value = scheduleRepository.validateSchedule()

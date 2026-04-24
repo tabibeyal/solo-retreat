@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -186,7 +187,8 @@ fun ScheduleBuilderScreen(
                 viewModel.addBlock(dayOffset, activityType, startTime, endTime, notes)
                 showAddDialog = false
             },
-            totalDays = viewModel.totalDays
+            totalDays = viewModel.totalDays,
+            onGetLastEndTime = { day -> viewModel.getLastEndTime(day) }
         )
     }
 
@@ -295,125 +297,130 @@ private fun LoadTemplateDialog(
 private fun AddBlockDialog(
     onDismiss: () -> Unit,
     onAdd: (Int, ActivityType, LocalTime, LocalTime, String?) -> Unit,
-    totalDays: Int
+    totalDays: Int,
+    onGetLastEndTime: (Int) -> LocalTime
 ) {
     var selectedDay by remember { mutableIntStateOf(0) }
     var selectedActivity by remember { mutableStateOf(ActivityType.SITTING) }
     var expandedActivity by remember { mutableStateOf(false) }
     var notes by remember { mutableStateOf("") }
-    val startTimeState = rememberTimePickerState(initialHour = 6, initialMinute = 0)
-    val endTimeState = rememberTimePickerState(initialHour = 7, initialMinute = 0)
+    
+    key(selectedDay) {
+        val initialTime = onGetLastEndTime(selectedDay)
+        val startTimeState = rememberTimePickerState(initialHour = initialTime.hour, initialMinute = initialTime.minute)
+        val endTimeState = rememberTimePickerState(initialHour = initialTime.plusHours(1).hour, initialMinute = initialTime.plusHours(1).minute)
 
-    var showError by remember { mutableStateOf<String?>(null) }
+        var showError by remember { mutableStateOf<String?>(null) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add Schedule Block") },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (showError != null) {
-                    Text(
-                        text = showError!!,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                }
-
-                // Day selector
-                if (totalDays > 1) {
-                    Text("Day: ${selectedDay + 1} of $totalDays", style = MaterialTheme.typography.labelLarge)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        TextButton(
-                            onClick = { if (selectedDay > 0) selectedDay-- },
-                            enabled = selectedDay > 0
-                        ) { Text("-") }
-                        Text(
-                            "${selectedDay + 1}",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        TextButton(
-                            onClick = { if (selectedDay < totalDays - 1) selectedDay++ },
-                            enabled = selectedDay < totalDays - 1
-                        ) { Text("+") }
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                // Activity type
-                ExposedDropdownMenuBox(
-                    expanded = expandedActivity,
-                    onExpandedChange = { expandedActivity = it }
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("Add Schedule Block") },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    OutlinedTextField(
-                        value = selectedActivity.displayName,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Activity") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedActivity) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = expandedActivity,
-                        onDismissRequest = { expandedActivity = false }
-                    ) {
-                        ActivityType.entries.forEach { type ->
-                            DropdownMenuItem(
-                                text = { Text(type.displayName) },
-                                onClick = {
-                                    selectedActivity = type
-                                    expandedActivity = false
-                                }
+                    if (showError != null) {
+                        Text(
+                            text = showError!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+
+                    // Day selector
+                    if (totalDays > 1) {
+                        Text("Day: ${selectedDay + 1} of $totalDays", style = MaterialTheme.typography.labelLarge)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            TextButton(
+                                onClick = { if (selectedDay > 0) selectedDay-- },
+                                enabled = selectedDay > 0
+                            ) { Text("-") }
+                            Text(
+                                "${selectedDay + 1}",
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                style = MaterialTheme.typography.bodyLarge
                             )
+                            TextButton(
+                                onClick = { if (selectedDay < totalDays - 1) selectedDay++ },
+                                enabled = selectedDay < totalDays - 1
+                            ) { Text("+") }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    // Activity type
+                    ExposedDropdownMenuBox(
+                        expanded = expandedActivity,
+                        onExpandedChange = { expandedActivity = it }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedActivity.displayName,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Activity") },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedActivity) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedActivity,
+                            onDismissRequest = { expandedActivity = false }
+                        ) {
+                            ActivityType.entries.forEach { type ->
+                                DropdownMenuItem(
+                                    text = { Text(type.displayName) },
+                                    onClick = {
+                                        selectedActivity = type
+                                        expandedActivity = false
+                                    }
+                                )
+                            }
                         }
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text("Start Time", style = MaterialTheme.typography.labelLarge)
+                    TimeInput(state = startTimeState)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text("End Time", style = MaterialTheme.typography.labelLarge)
+                    TimeInput(state = endTimeState)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = notes,
+                        onValueChange = { notes = it },
+                        label = { Text("Notes (optional)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("Start Time", style = MaterialTheme.typography.labelLarge)
-                TimeInput(state = startTimeState)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("End Time", style = MaterialTheme.typography.labelLarge)
-                TimeInput(state = endTimeState)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    label = { Text("Notes (optional)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                val start = LocalTime.of(startTimeState.hour, startTimeState.minute)
-                val end = LocalTime.of(endTimeState.hour, endTimeState.minute)
-                if (!end.isAfter(start)) {
-                    showError = "End time must be after start time"
-                } else {
-                    onAdd(selectedDay, selectedActivity, start, end, notes.ifBlank { null })
+            },
+            confirmButton = {
+                Button(onClick = {
+                    val start = LocalTime.of(startTimeState.hour, startTimeState.minute)
+                    val end = LocalTime.of(endTimeState.hour, endTimeState.minute)
+                    if (!end.isAfter(start)) {
+                        showError = "End time must be after start time"
+                    } else {
+                        onAdd(selectedDay, selectedActivity, start, end, notes.ifBlank { null })
+                    }
+                }) {
+                    Text("Add Block")
                 }
-            }) {
-                Text("Add Block")
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
+        )
+    }
 }

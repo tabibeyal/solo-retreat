@@ -1,0 +1,82 @@
+[
+  {
+    "id": "chant_01",
+    "title": "The Five Recollections",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/05%20The%20Five%20Recollections%20(p35).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_5",
+    "durationMinutes": 3,
+    "category": "Chants",
+    "description": "Recollections on aging, illness, death, separation, and kamma."
+  },
+  {
+    "id": "chant_02",
+    "title": "Contemplation of the Body",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/07%20Contemplation%20of%20the%20Body%20(p38).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_7",
+    "durationMinutes": 4,
+    "category": "Chants",
+    "description": "Reflecting on the parts of the body to develop detachment."
+  },
+  {
+    "id": "chant_03",
+    "title": "Verses on Friends",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/13%20Verses%20on%20Friends%20(p46).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_13",
+    "durationMinutes": 2,
+    "category": "Chants",
+    "description": "Understanding the qualities of a true friend."
+  },
+  {
+    "id": "chant_04",
+    "title": "Verses on Respect",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/14%20Verses%20on%20Respect%20(p47).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_14",
+    "durationMinutes": 2,
+    "category": "Chants",
+    "description": "The importance of showing respect to the Dhamma and elders."
+  },
+  {
+    "id": "chant_05",
+    "title": "The Verses on the Noble Truths",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/16%20The%20Verses%20on%20the%20Noble%20Truths%20(p51).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_16",
+    "durationMinutes": 2,
+    "category": "Chants",
+    "description": "Summary of the Four Noble Truths."
+  },
+  {
+    "id": "chant_06",
+    "title": "The Four Dhamma Summaries",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/17%20The%20Four%20Dhamma%20Summaries%20(p53).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_17",
+    "durationMinutes": 2,
+    "category": "Chants",
+    "description": "The four summaries of the world and its nature."
+  },
+  {
+    "id": "chant_07",
+    "title": "The Sublime Attitudes",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/11%20The%20Sublime%20Attitudes%20(p42).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0007.html#heading_id_11",
+    "durationMinutes": 4,
+    "category": "Chants",
+    "description": "Mettā, Karunā, Muditā, and Upekkhā (The Brahmavihāras)."
+  },
+  {
+    "id": "chant_08",
+    "title": "An Invitation to the Devas",
+    "teacher": "Chant",
+    "remoteUrl": "https://www.dhammatalks.org/Archive/Chants/22%20An%20Invitation%20to%20the%20Devas%20(p64).mp3",
+    "transcriptionUrl": "https://www.dhammatalks.org/books/ChantingGuide/Section0008.html#heading_id_22",
+    "durationMinutes": 3,
+    "category": "Chants",
+    "description": "Inviting the devas to listen to the Dhamma."
+  }
+]

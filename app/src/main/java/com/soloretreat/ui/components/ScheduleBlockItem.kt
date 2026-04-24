@@ -84,6 +84,7 @@ fun ActivityIcon(activityType: ActivityType, modifier: Modifier = Modifier) {
     val icon = when (activityType) {
         ActivityType.SITTING -> "\uD83E\uDD8B"
         ActivityType.WALKING -> "\uD83C\uDF43"
+        ActivityType.CHANTING -> "🙏"
         ActivityType.DHAMMA_TALK -> "\uD83D\udcda"
         ActivityType.MEAL -> "\uD83E\udd63"
         ActivityType.REST -> "\uD83C\uDF3F"

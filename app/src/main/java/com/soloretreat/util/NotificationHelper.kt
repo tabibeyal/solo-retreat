@@ -61,6 +61,7 @@ class NotificationHelper @Inject constructor(
         val title = when (activityType) {
             ActivityType.SITTING -> "Sitting Meditation Soon"
             ActivityType.WALKING -> "Walking Meditation Soon"
+            ActivityType.CHANTING -> "Chanting Session Soon"
             ActivityType.DHAMMA_TALK -> "Dhamma Talk Soon"
             ActivityType.MEAL -> "Meal Time Soon"
             ActivityType.REST -> "Rest Period Soon"

@@ -12,6 +12,7 @@ data class DhammaTalk(
     val title: String,
     val teacher: String,
     val remoteUrl: String,
+    val transcriptionUrl: String? = null,
     val localPath: String? = null,
     val downloadStatus: DownloadStatus = DownloadStatus.NOT_STARTED,
     val durationMinutes: Int,

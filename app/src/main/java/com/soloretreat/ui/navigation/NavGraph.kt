@@ -10,6 +10,7 @@ import com.soloretreat.ui.integration.FeedbackScreen
 import com.soloretreat.ui.integration.JournalEntryScreen
 import com.soloretreat.ui.integration.JournalListScreen
 import com.soloretreat.ui.integration.RetreatSummaryScreen
+import com.soloretreat.ui.preparation.ChantCatalogScreen
 import com.soloretreat.ui.preparation.ChecklistScreen
 import com.soloretreat.ui.preparation.EightPreceptsScreen
 import com.soloretreat.ui.preparation.PreparationDashboardScreen
@@ -33,6 +34,7 @@ fun HomeRetreatNavHost(
         composable(Screen.PreparationDashboard.route) {
             PreparationDashboardScreen(
                 onScheduleBuilder = { navController.navigate(Screen.ScheduleBuilder.route) },
+                onChantCatalog = { navController.navigate(Screen.ChantCatalog.route) },
                 onTalkCatalog = { navController.navigate(Screen.TalkCatalog.route) },
                 onChecklist = { navController.navigate(Screen.Checklist.route) },
                 onEightPrecepts = { navController.navigate(Screen.EightPrecepts.route) },
@@ -50,6 +52,12 @@ fun HomeRetreatNavHost(
 
         composable(Screen.TalkCatalog.route) {
             TalkCatalogScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.ChantCatalog.route) {
+            ChantCatalogScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
@@ -145,6 +153,7 @@ fun HomeRetreatNavHost(
 sealed class Screen(val route: String) {
     data object PreparationDashboard : Screen("preparation_dashboard")
     data object ScheduleBuilder : Screen("schedule_builder")
+    data object ChantCatalog : Screen("chant_catalog")
     data object TalkCatalog : Screen("talk_catalog")
     data object Checklist : Screen("checklist")
     data object EightPrecepts : Screen("eight_precepts")

@@ -34,6 +34,7 @@ import com.soloretreat.util.TimeUtils
 @Composable
 fun PreparationDashboardScreen(
     onScheduleBuilder: () -> Unit,
+    onChantCatalog: () -> Unit,
     onTalkCatalog: () -> Unit,
     onChecklist: () -> Unit,
     onEightPrecepts: () -> Unit,
@@ -171,6 +172,28 @@ fun PreparationDashboardScreen(
                     }
                 }
 
+                // Chants
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onChantCatalog
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Chants",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        val chants = state.talks.filter { it.category == "Chants" }
+                        val totalChants = chants.size
+                        val downloaded = chants.count { it.downloadStatus == com.soloretreat.data.model.DownloadStatus.COMPLETE }
+                        Text(
+                            text = "$downloaded of $totalChants chants downloaded",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
                 // Talks
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -182,8 +205,9 @@ fun PreparationDashboardScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        val totalTalks = state.talks.size
-                        val downloaded = state.talks.count { it.downloadStatus == com.soloretreat.data.model.DownloadStatus.COMPLETE }
+                        val talks = state.talks.filter { it.category != "Chants" }
+                        val totalTalks = talks.size
+                        val downloaded = talks.count { it.downloadStatus == com.soloretreat.data.model.DownloadStatus.COMPLETE }
                         Text(
                             text = "$downloaded of $totalTalks talks downloaded",
                             style = MaterialTheme.typography.bodyMedium,

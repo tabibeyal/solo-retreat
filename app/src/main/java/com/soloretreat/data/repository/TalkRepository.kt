@@ -33,6 +33,8 @@ class TalkRepository @Inject constructor(
 
     fun getRevealedTalks(): Flow<List<DhammaTalk>> = talkDao.getRevealedTalks()
 
+    fun getChants(): Flow<List<DhammaTalk>> = talkDao.getTalksByCategory("Chants")
+
     suspend fun countRevealed(): Int = talkDao.countRevealed()
 
     suspend fun revealNextBatch(count: Int): Int {
@@ -53,25 +55,33 @@ class TalkRepository @Inject constructor(
     suspend fun refreshCatalog() = withContext(kotlinx.coroutines.Dispatchers.IO) {
         android.util.Log.d("TalkRepository", "Refreshing catalog...")
         importCatalogFromAssets()
+        importChantsFromAssets()
         // Artificial delay to show the refresh animation
         kotlinx.coroutines.delay(1000)
     }
 
     suspend fun importCatalogFromAssets() {
-        android.util.Log.d("TalkRepository", "Importing from assets...")
+        android.util.Log.d("TalkRepository", "Importing talks from assets...")
+        importFromAsset("talks_catalog.json")
+    }
+
+    suspend fun importChantsFromAssets() {
+        android.util.Log.d("TalkRepository", "Importing chants from assets...")
+        importFromAsset("chants_catalog.json")
+    }
+
+    private suspend fun importFromAsset(fileName: String) {
         try {
-            val jsonString = context.assets.open("talks_catalog.json")
+            val jsonString = context.assets.open(fileName)
                 .bufferedReader()
                 .use { it.readText() }
 
             val catalog = catalogJson.decodeFromString<List<DhammaTalk>>(jsonString)
-            android.util.Log.d("TalkRepository", "Decoded ${catalog.size} talks from assets")
+            android.util.Log.d("TalkRepository", "Decoded ${catalog.size} items from $fileName")
             
             talkDao.upsertPreservingStatus(catalog)
-            android.util.Log.d("TalkRepository", "Catalog updated successfully")
         } catch (e: Exception) {
-            android.util.Log.e("TalkRepository", "Asset import failed, using defaults", e)
-            insertDefaultCatalog()
+            android.util.Log.e("TalkRepository", "Asset import failed for $fileName", e)
         }
     }
 

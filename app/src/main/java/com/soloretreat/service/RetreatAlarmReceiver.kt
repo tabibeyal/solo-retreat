@@ -132,6 +132,7 @@ class RetreatAlarmReceiver : BroadcastReceiver() {
         return activityType in listOf(
             ActivityType.SITTING,
             ActivityType.WALKING,
+            ActivityType.CHANTING,
             ActivityType.DHAMMA_TALK
         )
     }
