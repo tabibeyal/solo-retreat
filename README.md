@@ -23,29 +23,35 @@ com.soloretreat/
 │   ├── local/
 │   │   ├── HomeRetreatDatabase.kt     # Room database
 │   │   ├── Converters.kt              # Type converters
-│   │   ├── dao/                       # 8 DAOs
-│   │   └── entity/                    # 8 entities
+│   │   ├── dao/                       # 9 DAOs
+│   │   └── entity/                    # 9 entities
 │   ├── repository/                    # 7 repositories
 │   └── model/                         # Enums & Precept data
 ├── service/
-│   ├── RetreatSessionService.kt       # Foreground service
-│   ├── BellManager.kt                 # Tibetan bowl sounds
-│   ├── TalkDownloadWorker.kt          # WorkManager downloader
+│   ├── MeditationTimerService.kt      # Foreground timer service
+│   ├── TalkPlayerService.kt           # ExoPlayer-backed talk playback
+│   ├── TimerEngine.kt                 # Timer state + bell scheduling
+│   ├── BellManager.kt                 # Tibetan bowl sounds (MediaPlayer)
+│   ├── RetreatAlarmScheduler.kt       # AlarmManager scheduling
+│   ├── RetreatAlarmReceiver.kt        # Block-transition alarms
+│   ├── RetreatStopReceiver.kt         # Stop-action receiver
+│   ├── RetreatNotificationWorker.kt   # WorkManager reminder worker
 │   └── BootCompletedReceiver.kt       # Auto-restart on boot
 ├── ui/
 │   ├── theme/                         # Colors, Typography, Theme
 │   ├── components/                    # Reusable Compose components
 │   ├── preparation/                   # Prep phase screens + VMs
 │   ├── retreat/                       # Retreat phase screens + VMs
-│   ├── integration/                   # Integration screens + VMs
+│   ├── integration/                   # Integration screens + VMs (incl. Feedback)
 │   ├── navigation/                    # NavHost + Screen routes
+│   ├── widget/
+│   │   └── RetreatWidget.kt           # Glance home screen widget
 │   └── MainActivity.kt
-├── util/
-│   ├── Constants.kt
-│   ├── TimeUtils.kt
-│   └── NotificationHelper.kt
-└── widget/
-    └── RetreatWidget.kt               # Glance home screen widget
+└── util/
+    ├── Constants.kt
+    ├── TimeUtils.kt
+    ├── TimerFormatter.kt
+    └── NotificationHelper.kt
 ```
 
 ## Technology Stack
@@ -58,7 +64,7 @@ com.soloretreat/
 | DI | Hilt |
 | Database | Room (SQLite) |
 | Background Work | WorkManager |
-| Foreground Service | LifecycleService |
+| Foreground Service | Service (Hilt-injected) |
 | Audio Playback | ExoPlayer (talks), MediaPlayer (bells) |
 | Widgets | Glance |
 | Serialization | Kotlinx Serialization |
@@ -80,7 +86,7 @@ com.soloretreat/
 - [x] Validation gates (no overlap, meal before noon, talks downloaded)
 
 ### Phase 2: Retreat
-- [x] RetreatSessionService foreground service with persistent notification
+- [x] MeditationTimerService foreground service with persistent notification
 - [x] Block transition notifications
 - [x] Full-screen meditation timer with Tibetan singing bowl bells
 - [x] 8 Precepts tracker with Pali/English text
@@ -89,11 +95,12 @@ com.soloretreat/
 
 ### Phase 3: Integration
 - [x] Journal with tags and CRUD operations
-- [x] Retreat summary generator
+- [x] Retreat summary generator (includes journal entries)
 - [x] Plain text export via Android share sheet
+- [x] Feedback screen with email export
 
 ### Supporting Infrastructure
-- [x] 4 notification channels (service, reminders, meal, precepts)
+- [x] 5 notification channels (retreat service, timer service, block reminder, meal cutoff, precept reminder)
 - [x] Glance home screen widget
 - [x] Boot completed receiver for service restart
 - [x] Warm, non-clinical theme (sage green, ochre, cream)
