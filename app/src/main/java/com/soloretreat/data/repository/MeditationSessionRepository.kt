@@ -2,6 +2,7 @@ package com.soloretreat.data.repository
 
 import com.soloretreat.data.local.dao.MeditationSessionDao
 import com.soloretreat.data.local.entity.MeditationSession
+import com.soloretreat.data.model.ActivityType
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import javax.inject.Inject
@@ -20,4 +21,7 @@ class MeditationSessionRepository @Inject constructor(
     suspend fun update(session: MeditationSession) = meditationSessionDao.update(session)
     suspend fun completeSession(id: String, endTime: Instant, wasInterrupted: Boolean) = meditationSessionDao.completeSession(id, endTime, wasInterrupted)
     suspend fun getTotalMinutes(start: Instant, end: Instant): Long = meditationSessionDao.getTotalMinutes(start, end)
+    suspend fun countCompletedByType(type: ActivityType, start: Instant, end: Instant): Int = meditationSessionDao.countCompletedByType(type, start, end)
+    suspend fun countInterruptedByType(type: ActivityType, start: Instant, end: Instant): Int = meditationSessionDao.countInterruptedByType(type, start, end)
+    suspend fun getTotalMinutesByType(type: ActivityType, start: Instant, end: Instant): Long = meditationSessionDao.getTotalMinutesByType(type, start, end)
 }

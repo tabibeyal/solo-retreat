@@ -65,6 +65,10 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideScheduleTemplateDao(db: HomeRetreatDatabase) = db.scheduleTemplateDao()
+
+    @Provides
+    @Singleton
     fun provideRetreatRepository(
         retreatConfigDao: com.soloretreat.data.local.dao.RetreatConfigDao,
         checklistItemDao: com.soloretreat.data.local.dao.ChecklistItemDao,
@@ -88,8 +92,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideScheduleRepository(
-        scheduleBlockDao: com.soloretreat.data.local.dao.ScheduleBlockDao
-    ): ScheduleRepository = ScheduleRepository(scheduleBlockDao)
+        scheduleBlockDao: com.soloretreat.data.local.dao.ScheduleBlockDao,
+        scheduleTemplateDao: com.soloretreat.data.local.dao.ScheduleTemplateDao
+    ): ScheduleRepository = ScheduleRepository(scheduleBlockDao, scheduleTemplateDao)
 
     @Provides
     @Singleton

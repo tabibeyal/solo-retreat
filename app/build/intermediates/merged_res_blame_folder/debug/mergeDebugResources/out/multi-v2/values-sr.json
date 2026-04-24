@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.homeretreat.planner.app-mergeDebugResources-70:/values-sr/values-sr.xml",
+            "outputFile": "com.soloretreat.app-mergeDebugResources-70:/values-sr/values-sr.xml",
             "map": [
                 {
                     "source": "/home/eyal/.gradle/caches/8.13/transforms/e6ae1386833703f4916bae5f2c04f684/transformed/media3-exoplayer-1.2.1/res/values-sr/values-sr.xml",

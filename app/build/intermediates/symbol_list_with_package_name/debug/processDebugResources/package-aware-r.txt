@@ -1,4 +1,4 @@
-com.homeretreat.planner
+com.soloretreat
 anim fragment_fast_out_extra_slow_in
 anim glance_btn_checkbox_to_checked_box_inner_merged_animation
 anim glance_btn_checkbox_to_checked_box_outer_merged_animation

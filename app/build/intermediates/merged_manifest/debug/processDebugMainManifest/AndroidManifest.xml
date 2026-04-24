@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.homeretreat.planner"
+    package="com.soloretreat"
     android:versionCode="1"
     android:versionName="1.0.0" >
 
@@ -18,13 +18,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
-        android:name="com.homeretreat.planner.HomeRetreatApplication"
+        android:name="com.soloretreat.HomeRetreatApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -38,7 +38,7 @@
         android:testOnly="true"
         android:theme="@style/Theme.HomeRetreatPlanner" >
         <activity
-            android:name="com.homeretreat.planner.ui.MainActivity"
+            android:name="com.soloretreat.ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.HomeRetreatPlanner" >
@@ -50,16 +50,16 @@
         </activity>
 
         <receiver
-            android:name="com.homeretreat.planner.service.RetreatAlarmReceiver"
+            android:name="com.soloretreat.service.RetreatAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name="com.homeretreat.planner.service.RetreatStopReceiver"
+            android:name="com.soloretreat.service.RetreatStopReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name="com.homeretreat.planner.service.TalkPlayerService"
+            android:name="com.soloretreat.service.TalkPlayerService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" >
@@ -68,7 +68,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="com.homeretreat.planner.service.MeditationTimerService"
+            android:name="com.soloretreat.service.MeditationTimerService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse" >
@@ -78,7 +78,7 @@
         </service>
 
         <receiver
-            android:name="com.homeretreat.planner.service.BootCompletedReceiver"
+            android:name="com.soloretreat.service.BootCompletedReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -86,7 +86,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.homeretreat.planner.ui.widget.RetreatWidgetReceiver"
+            android:name="com.soloretreat.ui.widget.RetreatWidgetReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -131,7 +131,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.homeretreat.planner.androidx-startup"
+            android:authorities="com.soloretreat.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.work.WorkManagerInitializer"

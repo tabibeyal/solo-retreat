@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
+import com.soloretreat.data.local.entity.MeditationSession
+import com.soloretreat.data.model.ActivityType
+import com.soloretreat.data.repository.MeditationSessionRepository
 import com.soloretreat.util.TimerFormatter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -17,13 +20,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TimerEngine @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val bellManager: BellManager
+    private val bellManager: BellManager,
+    private val sessionRepository: MeditationSessionRepository
 ) {
     data class TimerState(
         val activityLabel: String = "Sitting Meditation",
@@ -51,10 +57,20 @@ class TimerEngine @Inject constructor(
     private var accumulatedMs: Long = 0
     private var segmentStartRealtime: Long = 0
 
+    private var currentActivityType: ActivityType? = null
+    private var currentSessionId: String? = null
+
     fun setActivityLabel(label: String) {
         val cur = _state.value
         if (!cur.isRunning && !cur.isPaused) {
             _state.value = cur.copy(activityLabel = label)
+        }
+    }
+
+    fun setActivityType(type: ActivityType?) {
+        val cur = _state.value
+        if (!cur.isRunning && !cur.isPaused) {
+            currentActivityType = type
         }
     }
 
@@ -83,6 +99,7 @@ class TimerEngine @Inject constructor(
             isPaused = false,
             isComplete = false
         )
+        logSessionStart()
         startService()
         startTicking()
     }
@@ -106,6 +123,7 @@ class TimerEngine @Inject constructor(
     fun abandon() {
         tickJob?.cancel()
         bellManager.release()
+        logSessionEnd(interrupted = true)
         totalMs = 0
         accumulatedMs = 0
         val cur = _state.value
@@ -144,6 +162,7 @@ class TimerEngine @Inject constructor(
 
     private fun complete() {
         bellManager.playEndBell()
+        logSessionEnd(interrupted = false)
         _state.update {
             it.copy(
                 isRunning = false,
@@ -153,6 +172,33 @@ class TimerEngine @Inject constructor(
             )
         }
         stopService()
+    }
+
+    private fun logSessionStart() {
+        val type = currentActivityType
+        if (type != ActivityType.SITTING && type != ActivityType.WALKING) {
+            currentSessionId = null
+            return
+        }
+        val id = UUID.randomUUID().toString()
+        currentSessionId = id
+        val session = MeditationSession(
+            id = id,
+            blockId = "",
+            actualStart = Instant.now(),
+            actualEnd = null,
+            interrupted = false,
+            activityType = type
+        )
+        scope.launch { sessionRepository.insert(session) }
+    }
+
+    private fun logSessionEnd(interrupted: Boolean) {
+        val id = currentSessionId ?: return
+        currentSessionId = null
+        scope.launch {
+            sessionRepository.completeSession(id, Instant.now(), interrupted)
+        }
     }
 
     private fun startService() {

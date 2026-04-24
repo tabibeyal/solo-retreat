@@ -2,6 +2,7 @@ package com.soloretreat.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.soloretreat.data.model.ActivityType
 import java.time.Instant
 import java.util.UUID
 
@@ -11,5 +12,6 @@ data class MeditationSession(
     val blockId: String,
     val actualStart: Instant,
     val actualEnd: Instant? = null,
-    val interrupted: Boolean = false
+    val interrupted: Boolean = false,
+    val activityType: ActivityType? = null
 )

@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.homeretreat.planner"
+3    package="com.soloretreat"
 4    android:versionCode="1"
 5    android:versionName="1.0.0" >
 6
@@ -35,19 +35,19 @@
 19
 20    <permission
 20-->[androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
-21        android:name="com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+21        android:name="com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 21-->[androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
 22        android:protectionLevel="signature" />
 22-->[androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
 23
-24    <uses-permission android:name="com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+24    <uses-permission android:name="com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 24-->[androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
 24-->[androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
 25
 26    <application
 26-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:20:5-98:19
-27        android:name="com.homeretreat.planner.HomeRetreatApplication"
-27-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:21:9-47
+27        android:name="com.soloretreat.HomeRetreatApplication"
+27-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:21:9-62
 28        android:allowBackup="true"
 28-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:22:9-35
 29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -71,7 +71,7 @@
 39-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:29:9-56
 40        <activity
 40-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:32:9-41:20
-41            android:name="com.homeretreat.planner.ui.MainActivity"
+41            android:name="com.soloretreat.ui.MainActivity"
 41-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:33:13-44
 42            android:exported="true"
 42-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:34:13-36
@@ -93,7 +93,7 @@
 51
 52        <receiver
 52-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:43:9-46:40
-53            android:name="com.homeretreat.planner.service.RetreatAlarmReceiver"
+53            android:name="com.soloretreat.service.RetreatAlarmReceiver"
 53-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:44:13-57
 54            android:enabled="true"
 54-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:45:13-35
@@ -101,7 +101,7 @@
 55-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:46:13-37
 56        <receiver
 56-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:48:9-51:40
-57            android:name="com.homeretreat.planner.service.RetreatStopReceiver"
+57            android:name="com.soloretreat.service.RetreatStopReceiver"
 57-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:49:13-56
 58            android:enabled="true"
 58-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:50:13-35
@@ -110,7 +110,7 @@
 60
 61        <service
 61-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:53:9-61:19
-62            android:name="com.homeretreat.planner.service.TalkPlayerService"
+62            android:name="com.soloretreat.service.TalkPlayerService"
 62-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:54:13-54
 63            android:enabled="true"
 63-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:55:13-35
@@ -127,7 +127,7 @@
 69        </service>
 70        <service
 70-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:63:9-71:19
-71            android:name="com.homeretreat.planner.service.MeditationTimerService"
+71            android:name="com.soloretreat.service.MeditationTimerService"
 71-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:64:13-59
 72            android:enabled="true"
 72-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:65:13-35
@@ -145,7 +145,7 @@
 79
 80        <receiver
 80-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:73:9-80:20
-81            android:name="com.homeretreat.planner.service.BootCompletedReceiver"
+81            android:name="com.soloretreat.service.BootCompletedReceiver"
 81-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:74:13-58
 82            android:enabled="true"
 82-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:75:13-35
@@ -160,7 +160,7 @@
 87        </receiver>
 88        <receiver
 88-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:87:9-96:20
-89            android:name="com.homeretreat.planner.ui.widget.RetreatWidgetReceiver"
+89            android:name="com.soloretreat.ui.widget.RetreatWidgetReceiver"
 89-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:88:13-60
 90            android:exported="true" >
 90-->/home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:89:13-36
@@ -243,7 +243,7 @@
 132-->[androidx.work:work-runtime:2.9.0] /home/eyal/.gradle/caches/8.13/transforms/f2dae4fe6ece8d702e358b20feb026db/transformed/work-runtime-2.9.0/AndroidManifest.xml:29:9-37:20
 133            android:name="androidx.startup.InitializationProvider"
 133-->[androidx.work:work-runtime:2.9.0] /home/eyal/.gradle/caches/8.13/transforms/f2dae4fe6ece8d702e358b20feb026db/transformed/work-runtime-2.9.0/AndroidManifest.xml:30:13-67
-134            android:authorities="com.homeretreat.planner.androidx-startup"
+134            android:authorities="com.soloretreat.androidx-startup"
 134-->[androidx.work:work-runtime:2.9.0] /home/eyal/.gradle/caches/8.13/transforms/f2dae4fe6ece8d702e358b20feb026db/transformed/work-runtime-2.9.0/AndroidManifest.xml:31:13-68
 135            android:exported="false" >
 135-->[androidx.work:work-runtime:2.9.0] /home/eyal/.gradle/caches/8.13/transforms/f2dae4fe6ece8d702e358b20feb026db/transformed/work-runtime-2.9.0/AndroidManifest.xml:32:13-37

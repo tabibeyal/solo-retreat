@@ -1,7 +1,10 @@
 package com.soloretreat.data.repository
 
 import com.soloretreat.data.local.dao.ScheduleBlockDao
+import com.soloretreat.data.local.dao.ScheduleTemplateDao
 import com.soloretreat.data.local.entity.ScheduleBlock
+import com.soloretreat.data.local.entity.ScheduleTemplate
+import com.soloretreat.data.local.entity.ScheduleTemplateBlock
 import com.soloretreat.data.model.ActivityType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -11,7 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ScheduleRepository @Inject constructor(
-    private val scheduleBlockDao: ScheduleBlockDao
+    private val scheduleBlockDao: ScheduleBlockDao,
+    private val templateDao: ScheduleTemplateDao
 ) {
     fun getAllBlocks(): Flow<List<ScheduleBlock>> = scheduleBlockDao.getAllBlocks()
 
@@ -103,6 +107,45 @@ class ScheduleRepository @Inject constructor(
         }
         return !hasOverlap && block.startTime.isBefore(block.endTime)
     }
+
+    fun getTemplates(): Flow<List<ScheduleTemplate>> = templateDao.getAll()
+
+    suspend fun saveCurrentAsTemplate(name: String): Boolean {
+        val trimmed = name.trim()
+        if (trimmed.isEmpty()) return false
+        val current = scheduleBlockDao.getAllBlocks().firstOrNull() ?: emptyList()
+        if (current.isEmpty()) return false
+        val template = ScheduleTemplate(name = trimmed)
+        val templateBlocks = current.map { block ->
+            ScheduleTemplateBlock(
+                templateId = template.id,
+                dayOffset = block.dayOffset,
+                startTime = block.startTime,
+                endTime = block.endTime,
+                activityType = block.activityType,
+                notes = block.notes
+            )
+        }
+        templateDao.save(template, templateBlocks)
+        return true
+    }
+
+    suspend fun applyTemplate(templateId: String) {
+        val blocks = templateDao.getBlocksFor(templateId)
+        scheduleBlockDao.deleteAll()
+        val newBlocks = blocks.map { tb ->
+            ScheduleBlock(
+                dayOffset = tb.dayOffset,
+                startTime = tb.startTime,
+                endTime = tb.endTime,
+                activityType = tb.activityType,
+                notes = tb.notes
+            )
+        }
+        scheduleBlockDao.insertAll(newBlocks)
+    }
+
+    suspend fun deleteTemplate(id: String) = templateDao.delete(id)
 
     sealed class ScheduleValidationResult {
         data object Valid : ScheduleValidationResult()

@@ -7,15 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.soloretreat.data.local.entity.DhammaTalk
 import com.soloretreat.data.model.DownloadStatus
 import com.soloretreat.data.repository.TalkRepository
-import com.soloretreat.service.TalkDownloadWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +26,7 @@ class TalkCatalogViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    val talks: StateFlow<List<DhammaTalk>> = talkRepository.getAllTalks()
+    val talks: StateFlow<List<DhammaTalk>> = talkRepository.getRevealedTalks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _isPlaying = MutableStateFlow(false)
@@ -48,6 +42,15 @@ class TalkCatalogViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
 
     private var exoPlayer: ExoPlayer? = null
+
+    init {
+        viewModelScope.launch {
+            talkRepository.importCatalogFromAssets()
+            if (talkRepository.countRevealed() == 0) {
+                talkRepository.revealNextBatch(INITIAL_BATCH_SIZE)
+            }
+        }
+    }
 
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -67,6 +70,10 @@ class TalkCatalogViewModel @Inject constructor(
             _error.value = null
             try {
                 talkRepository.refreshCatalog()
+                val revealed = talkRepository.revealNextBatch(REFRESH_BATCH_SIZE)
+                if (revealed == 0) {
+                    _error.value = "No more talks available"
+                }
             } catch (e: Exception) {
                 _error.value = "Failed to refresh: ${e.message}"
             } finally {
@@ -80,22 +87,13 @@ class TalkCatalogViewModel @Inject constructor(
             togglePlayPause(talk)
             return
         }
-        val inputData = Data.Builder()
-            .putString(TalkDownloadWorker.KEY_TALK_ID, talk.id)
-            .putString(TalkDownloadWorker.KEY_TALK_URL, talk.remoteUrl)
-            .putString(TalkDownloadWorker.KEY_TALK_TITLE, talk.title)
-            .build()
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val workRequest = OneTimeWorkRequestBuilder<TalkDownloadWorker>()
-            .setInputData(inputData)
-            .setConstraints(constraints)
-            .build()
-
-        WorkManager.getInstance(context).enqueue(workRequest)
+        if (talk.downloadStatus == DownloadStatus.IN_PROGRESS) return
+        viewModelScope.launch {
+            val ok = talkRepository.downloadTalk(talk)
+            if (!ok) {
+                _error.value = "Download failed for \"${talk.title}\""
+            }
+        }
     }
 
     private fun togglePlayPause(talk: DhammaTalk) {
@@ -133,5 +131,10 @@ class TalkCatalogViewModel @Inject constructor(
         exoPlayer?.removeListener(playerListener)
         exoPlayer?.release()
         exoPlayer = null
+    }
+
+    companion object {
+        private const val INITIAL_BATCH_SIZE = 5
+        private const val REFRESH_BATCH_SIZE = 3
     }
 }

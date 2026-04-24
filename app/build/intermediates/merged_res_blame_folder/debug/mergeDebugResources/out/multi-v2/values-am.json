@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.homeretreat.planner.app-mergeDebugResources-70:/values-am/values-am.xml",
+            "outputFile": "com.soloretreat.app-mergeDebugResources-70:/values-am/values-am.xml",
             "map": [
                 {
                     "source": "/home/eyal/.gradle/caches/8.13/transforms/b64ee38ee0bb4a1412361e9eb3798508/transformed/ui-release/res/values-am/values-am.xml",

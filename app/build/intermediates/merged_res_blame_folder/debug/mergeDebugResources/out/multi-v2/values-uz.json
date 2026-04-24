@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.homeretreat.planner.app-mergeDebugResources-70:/values-uz/values-uz.xml",
+            "outputFile": "com.soloretreat.app-mergeDebugResources-70:/values-uz/values-uz.xml",
             "map": [
                 {
                     "source": "/home/eyal/.gradle/caches/8.13/transforms/5bf1468aa1d8a7cb2cc76b1fbedfc6f6/transformed/glance-appwidget-1.0.0/res/values-uz/values-uz.xml",

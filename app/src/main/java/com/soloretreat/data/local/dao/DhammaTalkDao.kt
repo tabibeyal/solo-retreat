@@ -15,6 +15,18 @@ interface DhammaTalkDao {
     @Query("SELECT * FROM dhamma_talks ORDER BY category, title")
     fun getAllTalks(): Flow<List<DhammaTalk>>
 
+    @Query("SELECT * FROM dhamma_talks WHERE revealedAt IS NOT NULL ORDER BY revealedAt DESC")
+    fun getRevealedTalks(): Flow<List<DhammaTalk>>
+
+    @Query("SELECT COUNT(*) FROM dhamma_talks WHERE revealedAt IS NOT NULL")
+    suspend fun countRevealed(): Int
+
+    @Query("SELECT id FROM dhamma_talks WHERE revealedAt IS NULL ORDER BY id LIMIT :limit")
+    suspend fun getUnrevealedIds(limit: Int): List<String>
+
+    @Query("UPDATE dhamma_talks SET revealedAt = :timestamp WHERE id IN (:ids)")
+    suspend fun markRevealed(ids: List<String>, timestamp: Long)
+
     @Query("SELECT * FROM dhamma_talks WHERE downloadStatus = 'COMPLETE'")
     suspend fun getDownloadedTalks(): List<DhammaTalk>
 
@@ -39,7 +51,8 @@ interface DhammaTalkDao {
                 if (existing != null) {
                     update(talk.copy(
                         downloadStatus = existing.downloadStatus,
-                        localPath = existing.localPath
+                        localPath = existing.localPath,
+                        revealedAt = existing.revealedAt
                     ))
                 }
             }

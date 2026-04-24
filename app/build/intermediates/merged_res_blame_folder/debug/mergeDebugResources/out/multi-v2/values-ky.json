@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.homeretreat.planner.app-mergeDebugResources-70:/values-ky/values-ky.xml",
+            "outputFile": "com.soloretreat.app-mergeDebugResources-70:/values-ky/values-ky.xml",
             "map": [
                 {
                     "source": "/home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/res/values-ky/values-ky.xml",

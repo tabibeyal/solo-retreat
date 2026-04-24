@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.soloretreat.data.local.entity.MeditationSession
+import com.soloretreat.data.model.ActivityType
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -37,6 +38,15 @@ interface MeditationSessionDao {
 
     @Query("SELECT COALESCE(SUM((julianday(actualEnd) - julianday(actualStart)) * 24 * 60), 0) FROM meditation_sessions WHERE actualStart BETWEEN :start AND :end AND interrupted = 0")
     suspend fun getTotalMinutes(start: Instant, end: Instant): Long
+
+    @Query("SELECT COUNT(*) FROM meditation_sessions WHERE actualStart BETWEEN :start AND :end AND interrupted = 0 AND activityType = :type")
+    suspend fun countCompletedByType(type: ActivityType, start: Instant, end: Instant): Int
+
+    @Query("SELECT COUNT(*) FROM meditation_sessions WHERE actualStart BETWEEN :start AND :end AND interrupted = 1 AND activityType = :type")
+    suspend fun countInterruptedByType(type: ActivityType, start: Instant, end: Instant): Int
+
+    @Query("SELECT COALESCE(SUM((julianday(actualEnd) - julianday(actualStart)) * 24 * 60), 0) FROM meditation_sessions WHERE actualStart BETWEEN :start AND :end AND interrupted = 0 AND activityType = :type")
+    suspend fun getTotalMinutesByType(type: ActivityType, start: Instant, end: Instant): Long
 
     @Query("DELETE FROM meditation_sessions")
     suspend fun deleteAll()

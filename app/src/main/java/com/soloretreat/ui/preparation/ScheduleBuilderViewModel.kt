@@ -3,6 +3,7 @@ package com.soloretreat.ui.preparation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soloretreat.data.local.entity.ScheduleBlock
+import com.soloretreat.data.local.entity.ScheduleTemplate
 import com.soloretreat.data.model.ActivityType
 import com.soloretreat.data.repository.RetreatRepository
 import com.soloretreat.data.repository.ScheduleRepository
@@ -27,11 +28,17 @@ class ScheduleBuilderViewModel @Inject constructor(
     val blocks: StateFlow<List<ScheduleBlock>> = scheduleRepository.getAllBlocks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val templates: StateFlow<List<ScheduleTemplate>> = scheduleRepository.getTemplates()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     private val _validationResult = MutableStateFlow<ScheduleRepository.ScheduleValidationResult?>(null)
     val validationResult: StateFlow<ScheduleRepository.ScheduleValidationResult?> = _validationResult
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
+
+    private val _info = MutableStateFlow<String?>(null)
+    val info: StateFlow<String?> = _info
 
     init {
         viewModelScope.launch {
@@ -71,10 +78,39 @@ class ScheduleBuilderViewModel @Inject constructor(
         _error.value = null
     }
 
+    fun clearInfo() {
+        _info.value = null
+    }
+
     fun removeBlock(block: ScheduleBlock) {
         viewModelScope.launch {
             scheduleRepository.deleteBlock(block)
             validateSchedule()
+        }
+    }
+
+    fun saveTemplate(name: String) {
+        viewModelScope.launch {
+            val ok = scheduleRepository.saveCurrentAsTemplate(name)
+            if (ok) {
+                _info.value = "Template saved"
+            } else {
+                _error.value = "Cannot save: name empty or schedule has no blocks"
+            }
+        }
+    }
+
+    fun applyTemplate(templateId: String) {
+        viewModelScope.launch {
+            scheduleRepository.applyTemplate(templateId)
+            validateSchedule()
+            _info.value = "Template applied"
+        }
+    }
+
+    fun deleteTemplate(templateId: String) {
+        viewModelScope.launch {
+            scheduleRepository.deleteTemplate(templateId)
         }
     }
 

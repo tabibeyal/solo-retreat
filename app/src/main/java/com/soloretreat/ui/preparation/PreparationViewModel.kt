@@ -74,6 +74,18 @@ class PreparationViewModel @Inject constructor(
         }
     }
 
+    fun updateRetreatDates(startDate: LocalDate, endDate: LocalDate) {
+        viewModelScope.launch {
+            val config = retreatRepository.getConfig().firstOrNull() ?: return@launch
+            val updated = config.copy(startDate = startDate, endDate = endDate)
+            retreatRepository.updateConfig(updated)
+            if (updated.phase == Phase.READY || updated.phase == Phase.IN_PROGRESS) {
+                alarmScheduler.scheduleForRetreat(updated)
+            }
+            updateWidget()
+        }
+    }
+
     fun startRetreat() {
         viewModelScope.launch {
             retreatRepository.updatePhase(Phase.IN_PROGRESS)

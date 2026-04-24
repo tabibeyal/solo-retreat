@@ -1,5 +1,6 @@
 package com.soloretreat.ui.preparation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,14 +15,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -43,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.soloretreat.data.local.entity.ScheduleTemplate
 import com.soloretreat.data.model.ActivityType
 import com.soloretreat.ui.components.RetreatAppBar
 import com.soloretreat.ui.components.ScheduleBlockItem
@@ -57,9 +64,14 @@ fun ScheduleBuilderScreen(
     viewModel: ScheduleBuilderViewModel = hiltViewModel()
 ) {
     val blocks by viewModel.blocks.collectAsState()
+    val templates by viewModel.templates.collectAsState()
     val validationResult by viewModel.validationResult.collectAsState()
     val error by viewModel.error.collectAsState()
+    val info by viewModel.info.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    var showOverflow by remember { mutableStateOf(false) }
+    var showSaveTemplateDialog by remember { mutableStateOf(false) }
+    var showLoadTemplateDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(error) {
@@ -69,11 +81,42 @@ fun ScheduleBuilderScreen(
         }
     }
 
+    LaunchedEffect(info) {
+        info?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearInfo()
+        }
+    }
+
     Scaffold(
         topBar = {
             RetreatAppBar(
                 title = "Daily Schedule",
-                onNavigateBack = onNavigateBack
+                onNavigateBack = onNavigateBack,
+                actions = {
+                    IconButton(onClick = { showOverflow = true }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                    }
+                    DropdownMenu(
+                        expanded = showOverflow,
+                        onDismissRequest = { showOverflow = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Save as Template") },
+                            onClick = {
+                                showOverflow = false
+                                showSaveTemplateDialog = true
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Load Template") },
+                            onClick = {
+                                showOverflow = false
+                                showLoadTemplateDialog = true
+                            }
+                        )
+                    }
+                }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -146,6 +189,104 @@ fun ScheduleBuilderScreen(
             totalDays = viewModel.totalDays
         )
     }
+
+    if (showSaveTemplateDialog) {
+        SaveTemplateDialog(
+            onDismiss = { showSaveTemplateDialog = false },
+            onSave = { name ->
+                viewModel.saveTemplate(name)
+                showSaveTemplateDialog = false
+            }
+        )
+    }
+
+    if (showLoadTemplateDialog) {
+        LoadTemplateDialog(
+            templates = templates,
+            onDismiss = { showLoadTemplateDialog = false },
+            onApply = { id ->
+                viewModel.applyTemplate(id)
+                showLoadTemplateDialog = false
+            },
+            onDelete = { id -> viewModel.deleteTemplate(id) }
+        )
+    }
+}
+
+@Composable
+private fun SaveTemplateDialog(
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Save Schedule as Template") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Template name") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = { onSave(name) },
+                enabled = name.isNotBlank()
+            ) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LoadTemplateDialog(
+    templates: List<ScheduleTemplate>,
+    onDismiss: () -> Unit,
+    onApply: (String) -> Unit,
+    onDelete: (String) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Load Template") },
+        text = {
+            if (templates.isEmpty()) {
+                Text("No saved templates yet.")
+            } else {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    templates.forEach { template ->
+                        ListItem(
+                            headlineContent = { Text(template.name) },
+                            trailingContent = {
+                                IconButton(onClick = { onDelete(template.id) }) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "Delete template",
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            },
+                            modifier = Modifier.clickable { onApply(template.id) }
+                        )
+                    }
+                    Text(
+                        "Loading a template replaces the current schedule.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Close") }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

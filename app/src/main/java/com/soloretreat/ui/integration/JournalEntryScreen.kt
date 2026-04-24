@@ -14,6 +14,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,10 +32,30 @@ fun JournalEntryScreen(
     onNavigateBack: () -> Unit,
     viewModel: JournalViewModel = hiltViewModel()
 ) {
+    val editing by viewModel.editing.collectAsState()
     var text by remember { mutableStateOf("") }
     var tags by remember { mutableStateOf("") }
+    var hydrated by remember { mutableStateOf(entryId == null) }
 
-    // TODO: Load existing entry if entryId provided
+    LaunchedEffect(entryId) {
+        if (entryId != null) {
+            viewModel.loadEntry(entryId)
+        }
+    }
+
+    LaunchedEffect(editing, entryId) {
+        if (entryId != null && !hydrated) {
+            editing?.let {
+                text = it.entryText
+                tags = it.tags
+                hydrated = true
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { viewModel.clearEditing() }
+    }
 
     Scaffold(
         topBar = {
@@ -72,15 +95,19 @@ fun JournalEntryScreen(
 
             Button(
                 onClick = {
-                    viewModel.saveEntry(text, tags)
+                    if (entryId == null) {
+                        viewModel.saveEntry(text, tags)
+                    } else {
+                        viewModel.updateEntry(entryId, text, tags)
+                    }
                     onNavigateBack()
                 },
-                enabled = text.isNotBlank(),
+                enabled = text.isNotBlank() && hydrated,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.Check, contentDescription = null)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Save Entry")
+                Text(if (entryId == null) "Save Entry" else "Update Entry")
             }
         }
     }

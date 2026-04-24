@@ -198,8 +198,8 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/eyal/.gradle/caches/8
 	android:dataExtractionRules
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:23:9-65
 	android:name
-		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:21:9-47
-activity#com.homeretreat.planner.ui.MainActivity
+		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:21:9-62
+activity#com.soloretreat.ui.MainActivity
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:32:9-41:20
 	android:launchMode
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:36:13-44
@@ -219,7 +219,7 @@ category#android.intent.category.LAUNCHER
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:39:17-77
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:39:27-74
-receiver#com.homeretreat.planner.service.RetreatAlarmReceiver
+receiver#com.soloretreat.service.RetreatAlarmReceiver
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:43:9-46:40
 	android:enabled
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:45:13-35
@@ -227,7 +227,7 @@ ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/ma
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:46:13-37
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:44:13-57
-receiver#com.homeretreat.planner.service.RetreatStopReceiver
+receiver#com.soloretreat.service.RetreatStopReceiver
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:48:9-51:40
 	android:enabled
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:50:13-35
@@ -235,7 +235,7 @@ ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/ma
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:51:13-37
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:49:13-56
-service#com.homeretreat.planner.service.TalkPlayerService
+service#com.soloretreat.service.TalkPlayerService
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:53:9-61:19
 	android:enabled
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:55:13-35
@@ -251,7 +251,7 @@ action#androidx.media3.session.MediaSessionService
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:59:17-86
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:59:25-83
-service#com.homeretreat.planner.service.MeditationTimerService
+service#com.soloretreat.service.MeditationTimerService
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:63:9-71:19
 	android:enabled
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:65:13-35
@@ -267,7 +267,7 @@ ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/ma
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:70:17-57
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:69:17-76
-receiver#com.homeretreat.planner.service.BootCompletedReceiver
+receiver#com.soloretreat.service.BootCompletedReceiver
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:73:9-80:20
 	android:enabled
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:75:13-35
@@ -287,7 +287,7 @@ ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/ma
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:85:13-32
 	android:name
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:84:13-64
-receiver#com.homeretreat.planner.ui.widget.RetreatWidgetReceiver
+receiver#com.soloretreat.ui.widget.RetreatWidgetReceiver
 ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:87:9-96:20
 	android:exported
 		ADDED from /home/eyal/AndroidStudioProjects/HomeRetreat01/homeretreat/app/src/main/AndroidManifest.xml:89:13-36
@@ -791,7 +791,7 @@ ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms
 		ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
-permission#com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
@@ -801,7 +801,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
-uses-permission#com.homeretreat.planner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.soloretreat.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.12.0] /home/eyal/.gradle/caches/8.13/transforms/8f5a26b55c7747d0e04ff7953aa068d8/transformed/core-1.12.0/AndroidManifest.xml:26:22-94

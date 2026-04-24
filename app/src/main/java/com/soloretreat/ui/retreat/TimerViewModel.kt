@@ -23,6 +23,16 @@ class TimerViewModel @Inject constructor(
         val cur = engine.state.value
         if (cur.isComplete) engine.abandon()
         engine.setActivityLabel(getActivityLabel(initialActivityType))
+        engine.setActivityType(parseActivityType(initialActivityType))
+    }
+
+    private fun parseActivityType(type: String?): ActivityType? {
+        return try {
+            if (type == null) ActivityType.SITTING
+            else ActivityType.valueOf(type)
+        } catch (_: Exception) {
+            ActivityType.SITTING
+        }
     }
 
     fun selectDuration(minutes: Int) = engine.selectDuration(minutes)

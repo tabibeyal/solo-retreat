@@ -16,5 +16,6 @@ data class DhammaTalk(
     val downloadStatus: DownloadStatus = DownloadStatus.NOT_STARTED,
     val durationMinutes: Int,
     val category: String,
-    val description: String = ""
+    val description: String = "",
+    val revealedAt: Long? = null
 )

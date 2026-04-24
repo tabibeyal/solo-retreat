@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Solo Retreat</string>
+    <string name="app_name">SoloRetreat</string>
     <string name="paypal_donation_url">https://www.paypal.com/donate?business=eyaltabib82@gmail.com&amp;currency_code=USD</string>
     <style name="Theme.HomeRetreatPlanner" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>

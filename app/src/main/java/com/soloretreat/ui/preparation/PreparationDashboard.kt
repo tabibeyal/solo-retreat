@@ -42,6 +42,7 @@ fun PreparationDashboardScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var showResetConfirm by remember { mutableStateOf(false) }
+    var showEditDates by remember { mutableStateOf(false) }
 
     if (showResetConfirm) {
         AlertDialog(
@@ -107,7 +108,24 @@ fun PreparationDashboardScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        TextButton(onClick = { showEditDates = true }) {
+                            Text("Edit Dates")
+                        }
                     }
+                }
+
+                if (showEditDates) {
+                    RetreatDatesDialog(
+                        initialStart = config.startDate,
+                        initialEnd = config.endDate,
+                        confirmLabel = "Save",
+                        onConfirm = { start, end ->
+                            viewModel.updateRetreatDates(start, end)
+                            showEditDates = false
+                        },
+                        onDismiss = { showEditDates = false }
+                    )
                 }
 
                 // Checklist progress

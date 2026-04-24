@@ -1,58 +1,58 @@
 [
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/xml_data_extraction_rules.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/xml/data_extraction_rules.xml"
+        "merged": "com.soloretreat.app-debug-72:/drawable_ic_notification.xml.flat",
+        "source": "com.soloretreat.app-main-74:/drawable/ic_notification.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/drawable_ic_notification.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/drawable/ic_notification.xml"
+        "merged": "com.soloretreat.app-debug-72:/xml_backup_rules.xml.flat",
+        "source": "com.soloretreat.app-main-74:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/drawable_ic_stop.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/drawable/ic_stop.xml"
+        "merged": "com.soloretreat.app-debug-72:/layout_retreat_widget_loading.xml.flat",
+        "source": "com.soloretreat.app-main-74:/layout/retreat_widget_loading.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/xml_backup_rules.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/xml/backup_rules.xml"
+        "merged": "com.soloretreat.app-debug-72:/xml_data_extraction_rules.xml.flat",
+        "source": "com.soloretreat.app-main-74:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/layout_retreat_widget_loading.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/layout/retreat_widget_loading.xml"
+        "merged": "com.soloretreat.app-debug-72:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.soloretreat.app-main-74:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/layout_retreat_widget_preview.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/layout/retreat_widget_preview.xml"
+        "merged": "com.soloretreat.app-debug-72:/raw_bell_start.mp3.flat",
+        "source": "com.soloretreat.app-main-74:/raw/bell_start.mp3"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/raw_bell_end.mp3.flat",
-        "source": "com.homeretreat.planner.app-main-74:/raw/bell_end.mp3"
+        "merged": "com.soloretreat.app-debug-72:/layout_retreat_widget_preview.xml.flat",
+        "source": "com.soloretreat.app-main-74:/layout/retreat_widget_preview.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/raw_bell_start.mp3.flat",
-        "source": "com.homeretreat.planner.app-main-74:/raw/bell_start.mp3"
+        "merged": "com.soloretreat.app-debug-72:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.soloretreat.app-main-74:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.soloretreat.app-debug-72:/drawable_widget_background.xml.flat",
+        "source": "com.soloretreat.app-main-74:/drawable/widget_background.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.soloretreat.app-debug-72:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.soloretreat.app-main-74:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/xml_retreat_widget_info.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/xml/retreat_widget_info.xml"
+        "merged": "com.soloretreat.app-debug-72:/raw_bell_end.mp3.flat",
+        "source": "com.soloretreat.app-main-74:/raw/bell_end.mp3"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/drawable/ic_launcher_background.xml"
+        "merged": "com.soloretreat.app-debug-72:/xml_retreat_widget_info.xml.flat",
+        "source": "com.soloretreat.app-main-74:/xml/retreat_widget_info.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.soloretreat.app-debug-72:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.soloretreat.app-main-74:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.homeretreat.planner.app-debug-72:/drawable_widget_background.xml.flat",
-        "source": "com.homeretreat.planner.app-main-74:/drawable/widget_background.xml"
+        "merged": "com.soloretreat.app-debug-72:/drawable_ic_stop.xml.flat",
+        "source": "com.soloretreat.app-main-74:/drawable/ic_stop.xml"
     }
 ]
