@@ -257,8 +257,9 @@ fun RetreatDashboardScreen(
                     Text("Journal")
                 }
                 OutlinedButton(onClick = {
-                    viewModel.endRetreat()
-                    onEndRetreat()
+                    viewModel.endRetreat {
+                        onEndRetreat()
+                    }
                 }) {
                     Icon(Icons.Default.DateRange, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))

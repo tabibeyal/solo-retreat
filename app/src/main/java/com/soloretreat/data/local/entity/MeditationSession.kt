@@ -12,6 +12,7 @@ data class MeditationSession(
     val blockId: String,
     val actualStart: Instant,
     val actualEnd: Instant? = null,
+    val durationSeconds: Long = 0,
     val interrupted: Boolean = false,
     val activityType: ActivityType? = null
 )

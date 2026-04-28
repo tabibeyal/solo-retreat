@@ -29,6 +29,15 @@ class RetreatSummaryViewModel @Inject constructor(
     private val journalRepository: JournalRepository
 ) : ViewModel() {
 
+    data class ActivityStat(
+        val type: ActivityType,
+        val displayName: String,
+        val minutes: Long,
+        val formattedTime: String,
+        val completed: Int,
+        val interrupted: Int
+    )
+
     data class SummaryState(
         val config: RetreatConfig? = null,
         val sittingMinutes: Long = 0,
@@ -39,6 +48,7 @@ class RetreatSummaryViewModel @Inject constructor(
         val formattedWalkingTime: String = "0m",
         val walkingCompleted: Int = 0,
         val walkingInterrupted: Int = 0,
+        val otherActivities: List<ActivityStat> = emptyList(),
         val preceptRate: Float = 0f,
         val onTimeMeals: Int = 0,
         val lateMeals: Int = 0,
@@ -64,6 +74,15 @@ class RetreatSummaryViewModel @Inject constructor(
                     val sittingMinutes = meditationSessionRepository.getTotalMinutesByType(ActivityType.SITTING, startInstant, endInstant)
                     val sittingCompleted = meditationSessionRepository.countCompletedByType(ActivityType.SITTING, startInstant, endInstant)
                     val sittingInterrupted = meditationSessionRepository.countInterruptedByType(ActivityType.SITTING, startInstant, endInstant)
+
+                    val otherTypes = ActivityType.values().filter { it != ActivityType.SITTING && it != ActivityType.WALKING }
+                    val otherStats = otherTypes.mapNotNull { type ->
+                        val mins = meditationSessionRepository.getTotalMinutesByType(type, startInstant, endInstant)
+                        val comp = meditationSessionRepository.countCompletedByType(type, startInstant, endInstant)
+                        val intr = meditationSessionRepository.countInterruptedByType(type, startInstant, endInstant)
+                        if (comp + intr == 0) null
+                        else ActivityStat(type, type.displayName, mins, TimeUtils.formatDuration(mins), comp, intr)
+                    }
                     val walkingMinutes = meditationSessionRepository.getTotalMinutesByType(ActivityType.WALKING, startInstant, endInstant)
                     val walkingCompleted = meditationSessionRepository.countCompletedByType(ActivityType.WALKING, startInstant, endInstant)
                     val walkingInterrupted = meditationSessionRepository.countInterruptedByType(ActivityType.WALKING, startInstant, endInstant)
@@ -81,6 +100,7 @@ class RetreatSummaryViewModel @Inject constructor(
                         formattedWalkingTime = TimeUtils.formatDuration(walkingMinutes),
                         walkingCompleted = walkingCompleted,
                         walkingInterrupted = walkingInterrupted,
+                        otherActivities = otherStats,
                         preceptRate = preceptRate,
                         onTimeMeals = onTime,
                         lateMeals = late,
@@ -121,6 +141,13 @@ class RetreatSummaryViewModel @Inject constructor(
             appendLine("  Completed sessions: ${s.walkingCompleted}")
             appendLine("  Interrupted sessions: ${s.walkingInterrupted}")
             appendLine()
+            s.otherActivities.forEach { stat ->
+                appendLine(stat.displayName.uppercase())
+                appendLine("  Total time: ${stat.formattedTime}")
+                appendLine("  Completed sessions: ${stat.completed}")
+                appendLine("  Interrupted sessions: ${stat.interrupted}")
+                appendLine()
+            }
             appendLine("PRECEPTS")
             appendLine("  Average observance: ${(s.preceptRate * 100).toInt()}%")
             appendLine()

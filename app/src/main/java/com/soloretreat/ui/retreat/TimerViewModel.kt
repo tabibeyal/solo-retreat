@@ -2,11 +2,13 @@ package com.soloretreat.ui.retreat
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.soloretreat.data.model.ActivityType
 import com.soloretreat.service.TimerEngine
 import com.soloretreat.util.TimerFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +23,9 @@ class TimerViewModel @Inject constructor(
 
     init {
         val cur = engine.state.value
-        if (cur.isComplete) engine.abandon()
+        if (cur.isComplete) {
+            viewModelScope.launch { engine.abandon() }
+        }
         engine.setActivityLabel(getActivityLabel(initialActivityType))
         engine.setActivityType(parseActivityType(initialActivityType))
     }
@@ -38,17 +42,18 @@ class TimerViewModel @Inject constructor(
     fun selectDuration(minutes: Int) = engine.selectDuration(minutes)
     fun startTimer() = engine.start()
     fun togglePause() = engine.togglePause()
-    fun abandonSession() = engine.abandon()
+    fun abandonSession() {
+        viewModelScope.launch { engine.abandon() }
+    }
+    fun consumeLogEvent() = engine.consumeLogEvent()
+    fun discardLastLog() = engine.discardLastLog()
 
     private fun getActivityLabel(type: String?): String {
         return try {
-            if (type == null) "Sitting Meditation"
-            else when (val activity = ActivityType.valueOf(type)) {
-                ActivityType.SITTING, ActivityType.WALKING -> activity.displayName
-                else -> "Sitting Meditation"
-            }
+            if (type == null) ActivityType.SITTING.displayName
+            else ActivityType.valueOf(type).displayName
         } catch (_: Exception) {
-            "Sitting Meditation"
+            ActivityType.SITTING.displayName
         }
     }
 

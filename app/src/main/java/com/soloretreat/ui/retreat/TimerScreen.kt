@@ -22,11 +22,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,8 +50,27 @@ fun TimerScreen(
     viewModel: TimerViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     KeepScreenOn()
+
+    LaunchedEffect(state.lastLogEvent?.id) {
+        val event = state.lastLogEvent ?: return@LaunchedEffect
+        val label = if (event.interrupted)
+            "Stopped early — logged ${event.elapsedMinutes}m"
+        else
+            "Session complete — logged ${event.elapsedMinutes}m"
+        val result = snackbarHostState.showSnackbar(
+            message = label,
+            actionLabel = "Discard",
+            duration = SnackbarDuration.Short
+        )
+        if (result == SnackbarResult.ActionPerformed) {
+            viewModel.discardLastLog()
+        } else {
+            viewModel.consumeLogEvent()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -172,6 +197,11 @@ fun TimerScreen(
                 tint = TimerText.copy(alpha = 0.5f)
             )
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

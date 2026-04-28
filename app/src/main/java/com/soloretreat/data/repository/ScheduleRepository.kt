@@ -5,7 +5,7 @@ import com.soloretreat.data.local.dao.ScheduleTemplateDao
 import com.soloretreat.data.local.entity.ScheduleBlock
 import com.soloretreat.data.local.entity.ScheduleTemplate
 import com.soloretreat.data.local.entity.ScheduleTemplateBlock
-import com.soloretreat.data.model.ActivityType
+import com.soloretreat.util.ScheduleValidator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalTime
@@ -64,38 +64,14 @@ class ScheduleRepository @Inject constructor(
 
     suspend fun validateSchedule(): ScheduleValidationResult {
         val blocks = scheduleBlockDao.getAllBlocks().firstOrNull() ?: emptyList()
-
-        if (blocks.isEmpty()) return ScheduleValidationResult.NoBlocks
-
-        val grouped = blocks.groupBy { it.dayOffset }
-
-        for ((_, dayBlocks) in grouped) {
-            val sorted = dayBlocks.sortedBy { it.startTime }
-
-            for (i in 0 until sorted.size - 1) {
-                val current = sorted[i]
-                val next = sorted[i + 1]
-                if (next.startTime.isBefore(current.endTime)) {
-                    return ScheduleValidationResult.Overlap(
-                        dayOffset = current.dayOffset,
-                        block1 = "${current.activityType.displayName} (${current.startTime}-${current.endTime})",
-                        block2 = "${next.activityType.displayName} (${next.startTime}-${next.endTime})"
-                    )
-                }
-            }
-
-            val mealBlocks = sorted.filter { it.activityType == ActivityType.MEAL }
-            for (meal in mealBlocks) {
-                if (meal.endTime.isAfter(LocalTime.of(12, 0))) {
-                    return ScheduleValidationResult.MealTooLate(
-                        dayOffset = meal.dayOffset,
-                        endTime = meal.endTime
-                    )
-                }
-            }
+        val result = ScheduleValidator.validate(blocks)
+        
+        return when (result) {
+            ScheduleValidator.ValidationResult.Valid -> ScheduleValidationResult.Valid
+            ScheduleValidator.ValidationResult.NoBlocks -> ScheduleValidationResult.NoBlocks
+            is ScheduleValidator.ValidationResult.Overlap -> ScheduleValidationResult.Overlap(result.dayOffset, result.block1, result.block2)
+            is ScheduleValidator.ValidationResult.MealTooLate -> ScheduleValidationResult.MealTooLate(result.dayOffset, result.endTime)
         }
-
-        return ScheduleValidationResult.Valid
     }
 
     private suspend fun validateBlock(block: ScheduleBlock): Boolean {

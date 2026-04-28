@@ -10,6 +10,7 @@ import com.soloretreat.data.model.Phase
 import com.soloretreat.data.repository.RetreatRepository
 import com.soloretreat.data.repository.ScheduleRepository
 import com.soloretreat.service.RetreatAlarmScheduler
+import com.soloretreat.service.TimerEngine
 import com.soloretreat.util.TimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,6 +28,7 @@ class RetreatDashboardViewModel @Inject constructor(
     private val retreatRepository: RetreatRepository,
     private val scheduleRepository: ScheduleRepository,
     private val alarmScheduler: RetreatAlarmScheduler,
+    private val timerEngine: TimerEngine,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -62,11 +64,15 @@ class RetreatDashboardViewModel @Inject constructor(
         }
     }
 
-    fun endRetreat() {
+    fun endRetreat(onComplete: () -> Unit) {
         viewModelScope.launch {
+            if (timerEngine.state.value.isRunning || timerEngine.state.value.isPaused) {
+                timerEngine.abandon()
+            }
             retreatRepository.updatePhase(Phase.COMPLETED)
             alarmScheduler.cancelAll()
             updateWidget()
+            onComplete()
         }
     }
 

@@ -66,8 +66,10 @@ class MeditationTimerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == Constants.ACTION_STOP_TIMER) {
-            timerEngine.abandon()
-            stopSelf()
+            scope.launch {
+                timerEngine.abandon()
+                stopSelf()
+            }
         }
         return START_NOT_STICKY
     }

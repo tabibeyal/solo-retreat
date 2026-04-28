@@ -20,6 +20,7 @@ class MeditationSessionRepository @Inject constructor(
     suspend fun insert(session: MeditationSession) = meditationSessionDao.insert(session)
     suspend fun update(session: MeditationSession) = meditationSessionDao.update(session)
     suspend fun completeSession(id: String, endTime: Instant, wasInterrupted: Boolean) = meditationSessionDao.completeSession(id, endTime, wasInterrupted)
+    suspend fun deleteById(id: String) = meditationSessionDao.deleteById(id)
     suspend fun getTotalMinutes(start: Instant, end: Instant): Long = meditationSessionDao.getTotalMinutes(start, end)
     suspend fun countCompletedByType(type: ActivityType, start: Instant, end: Instant): Int = meditationSessionDao.countCompletedByType(type, start, end)
     suspend fun countInterruptedByType(type: ActivityType, start: Instant, end: Instant): Int = meditationSessionDao.countInterruptedByType(type, start, end)

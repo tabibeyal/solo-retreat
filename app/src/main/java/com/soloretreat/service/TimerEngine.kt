@@ -38,7 +38,8 @@ class TimerEngine @Inject constructor(
         val remainingSeconds: Long = 30 * 60L,
         val isRunning: Boolean = false,
         val isPaused: Boolean = false,
-        val isComplete: Boolean = false
+        val isComplete: Boolean = false,
+        val lastLogEvent: SessionLogEvent? = null
     ) {
         val formattedTime: String
             get() = TimerFormatter.formatSeconds(
@@ -46,6 +47,13 @@ class TimerEngine @Inject constructor(
                 else selectedMinutes * 60L
             )
     }
+
+    data class SessionLogEvent(
+        val id: String,
+        val elapsedMinutes: Long,
+        val interrupted: Boolean,
+        val timestamp: Long = SystemClock.elapsedRealtime()
+    )
 
     private val _state = MutableStateFlow(TimerState())
     val state: StateFlow<TimerState> = _state.asStateFlow()
@@ -59,6 +67,7 @@ class TimerEngine @Inject constructor(
 
     private var currentActivityType: ActivityType? = null
     private var currentSessionId: String? = null
+    private var currentSessionStart: Instant? = null
 
     fun setActivityLabel(label: String) {
         val cur = _state.value
@@ -120,7 +129,7 @@ class TimerEngine @Inject constructor(
         }
     }
 
-    fun abandon() {
+    suspend fun abandon() {
         tickJob?.cancel()
         bellManager.release()
         logSessionEnd(interrupted = true)
@@ -160,7 +169,7 @@ class TimerEngine @Inject constructor(
         }
     }
 
-    private fun complete() {
+    private suspend fun complete() {
         bellManager.playEndBell()
         logSessionEnd(interrupted = false)
         _state.update {
@@ -175,30 +184,52 @@ class TimerEngine @Inject constructor(
     }
 
     private fun logSessionStart() {
-        val type = currentActivityType
-        if (type != ActivityType.SITTING && type != ActivityType.WALKING) {
-            currentSessionId = null
-            return
-        }
-        val id = UUID.randomUUID().toString()
-        currentSessionId = id
+        currentSessionId = UUID.randomUUID().toString()
+        currentSessionStart = Instant.now()
+    }
+
+    private suspend fun logSessionEnd(interrupted: Boolean) {
+        val id = currentSessionId ?: return
+        val startInstant = currentSessionStart ?: return
+        currentSessionId = null
+        currentSessionStart = null
+        val elapsedSeconds = _state.value.elapsedSeconds
+        val elapsedMinutes = (elapsedSeconds + 30) / 60
+        val endInstant = Instant.now()
+        val type = currentActivityType ?: ActivityType.SITTING
         val session = MeditationSession(
             id = id,
             blockId = "",
-            actualStart = Instant.now(),
-            actualEnd = null,
-            interrupted = false,
+            actualStart = startInstant,
+            actualEnd = endInstant,
+            durationSeconds = elapsedSeconds,
+            interrupted = interrupted,
             activityType = type
         )
-        scope.launch { sessionRepository.insert(session) }
+        try {
+            sessionRepository.insert(session)
+        } catch (e: Exception) {
+            android.util.Log.e("TimerEngine", "Session insert failed", e)
+        }
+        _state.update {
+            it.copy(
+                lastLogEvent = SessionLogEvent(
+                    id = id,
+                    elapsedMinutes = elapsedMinutes,
+                    interrupted = interrupted
+                )
+            )
+        }
     }
 
-    private fun logSessionEnd(interrupted: Boolean) {
-        val id = currentSessionId ?: return
-        currentSessionId = null
-        scope.launch {
-            sessionRepository.completeSession(id, Instant.now(), interrupted)
-        }
+    fun consumeLogEvent() {
+        _state.update { it.copy(lastLogEvent = null) }
+    }
+
+    fun discardLastLog() {
+        val event = _state.value.lastLogEvent ?: return
+        scope.launch { sessionRepository.deleteById(event.id) }
+        _state.update { it.copy(lastLogEvent = null) }
     }
 
     private fun startService() {

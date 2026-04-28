@@ -21,9 +21,7 @@ data class PreceptLog(
 
     fun observanceRate(): Float {
         val list = observanceList()
-        val answered = list.count { it != null }
-        if (answered == 0) return 0f
         val observed = list.count { it == true }
-        return observed.toFloat() / answered.toFloat()
+        return observed.toFloat() / list.size.toFloat()
     }
 }

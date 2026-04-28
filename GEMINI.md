@@ -21,8 +21,9 @@
     *   `./gradlew assembleDebug`: Build the debug APK.
     *   `./gradlew clean`: Clean build artifacts.
 *   **Test commands and rules**:
-    *   `./gradlew test`: Run unit tests.
+    *   `./gradlew test`: Run unit tests (includes Kotest Property-Based Tests).
     *   `./gradlew connectedAndroidTest`: Run instrumented tests on a device/emulator.
+    *   **Property-Based Testing**: Use Kotest Property for complex logic (e.g., `TimeUtils`, `ScheduleValidator`).
 *   **Lint / format commands**:
     *   Use Android Studio's built-in "Inspect Code" and "Reformat Code".
 *   **Review checklists / pre-PR steps**:
